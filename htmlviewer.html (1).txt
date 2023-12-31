@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Furg</title>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+
+  #post-container {
+    border: 2px solid red;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  #post-code {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+</style>
+</head>
+<body>
+  <h1>Furg</h1>
+  <textarea id="post-content" placeholder="Create your post here..."></textarea><br>
+  <input type="file" id="post-image">
+  <button id="create-post">Create</button>
+
+  <div id="posts-area"></div>
+
+  <script>
+    const createPostButton = document.getElementById("create-post");
+    const postContent = document.getElementById("post-content");
+    const postImage = document.getElementById("post-image");
+    const postsArea = document.getElementById("posts-area");
+
+    createPostButton.addEventListener("click", () => {
+      const postCode = createPostCode();
+      const postContainer = document.createElement("div");
+      postContainer.id = "post-container";
+      postContainer.innerHTML = postCode;
+      postsArea.appendChild(postContainer);
+
+      navigator.clipboard.writeText(postCode)
+        .then(() => alert("Code copied to clipboard!"))
+        .catch(err => console.error("Failed to copy code:", err));
+    });
+
+    function createPostCode() {
+      const imageUrl = postImage.value ? URL.createObjectURL(postImage.files[0]) : "";
+      return `
+        <p>${postContent.value}</p>
+        ${imageUrl ? `<img src="${imageUrl}" alt="Post image">` : ""}
+        <div id="post-code">
+          <button onclick="copyCode(this)">Copy Code</button>
+          <pre><code>${generatePostCode()}</code></pre>
+        </div>
+      `;
+    }
+
+    function generatePostCode() {
+      // Replace this with your logic to generate the sharable code
+      return "Your sharable code will be generated here";
+    }
+
+    function copyCode(button) {
+      const codeElement = button.parentElement.querySelector("code");
+      navigator.clipboard.writeText(codeElement.textContent)
+        .then(() => alert("Code copied to clipboard!"))
+        .catch(err => console.error("Failed to copy code:", err));
+    }
+  </script>
+</body>
+</html>
